@@ -30,6 +30,23 @@ module Bowling
 
 		end
 
+		context "ストライクを含む場合" do
+
+			before do
+				@game = Game.new
+				@game.roll(10) 
+				@game.roll(3) 
+				@game.roll(4) 
+				16.times { @game.roll(0) }
+			end
+
+			describe "#score" do
+				subject { @game.score }
+				it { should equal(24) }
+			end
+
+		end
+
 	end
 end
 
