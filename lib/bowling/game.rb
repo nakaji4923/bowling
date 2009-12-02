@@ -14,6 +14,14 @@ module Bowling
 			return @rolls[@idx] + @rolls[@idx + 1]
 		end
 
+    def pins
+			if self.strike?
+				return self.roll
+			else
+			  return self.two_rolls
+			end
+		end
+
     def bonus
 			if self.strike?
 				return self.two_rolls_from(@idx + 1)
@@ -81,15 +89,18 @@ module Bowling
 			cur = RollCursor.new(@rolls)
 			10.times do
 				if cur.strike?
-					score += cur.roll
+					# score += cur.roll
 					# score += cur.strike_bonus
+					score += cur.pins
 					score += cur.bonus
 				elsif cur.spare?
-					score += cur.two_rolls
+					# score += cur.two_rolls
 					# score += cur.spare_bonus
+					score += cur.pins
 					score += cur.bonus
 				else
-					score += cur.two_rolls
+					# score += cur.two_rolls
+					score += cur.pins
 				end
 				cur.next
 			end
