@@ -34,11 +34,13 @@ module Bowling
 			10.times do
 				if roll_at(roll_idx) == 10 # case strike
 					score += roll_at(roll_idx)
-					score += two_rolls_from(roll_idx + 1)
+					# score += two_rolls_from(roll_idx + 1)
+					score += strike_bonus(roll_idx)
 					roll_idx += 1
 				elsif two_rolls_from(roll_idx) == 10 # case spare
 					score += two_rolls_from(roll_idx)
-					score += roll_at(roll_idx + 2)
+					# score += roll_at(roll_idx + 2)
+					score += spare_bonus(roll_idx)
 					roll_idx += 2
 				else
 					score += two_rolls_from(roll_idx)
@@ -49,14 +51,23 @@ module Bowling
 			return score
 		end
 
+
     private
+
 		def roll_at(idx)
 			return @rolls[idx]
 		end
 
-    private
 		def two_rolls_from(idx)
 			return @rolls[idx] + @rolls[idx + 1]
+		end
+
+		def strike_bonus(idx)
+			return two_rolls_from(idx + 1)
+		end
+
+		def spare_bonus(idx)
+			return roll_at(idx + 2)
 		end
 
 	end
