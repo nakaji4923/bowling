@@ -30,9 +30,19 @@ module Bowling
 			return self.two_rolls == 10
 		end
 
+    def next
+			if self.strike?
+				@idx += 1
+			else
+				@idx += 2
+			end
+		end
+
+=begin
     def advance(n)
 			@idx += n
 		end
+=end
 
 		def roll_at(index)
 			return @rolls[index]
@@ -61,15 +71,13 @@ module Bowling
 				if cur.strike?
 					score += cur.roll
 					score += cur.strike_bonus
-					cur.advance(1)
 				elsif cur.spare?
 					score += cur.two_rolls
 					score += cur.spare_bonus
-					cur.advance(2)
 				else
 					score += cur.two_rolls
-					cur.advance(2)
 				end
+				cur.next
 			end
 
 			return score
