@@ -1,85 +1,79 @@
 module Bowling
+
+  class RollCursor
+		def initialize(rolls)
+			@idx = 0
+			@rolls = rolls
+		end
+
+		def roll
+			return @rolls[@idx]
+		end
+
+		def two_rolls
+			return @rolls[@idx] + @rolls[@idx + 1]
+		end
+
+		def strike_bonus
+			return self.two_rolls_from(@idx + 1)
+		end
+
+		def spare_bonus
+			return self.roll_at(@idx + 2)
+		end
+
+	 	def strike?
+			return self.roll == 10
+		end
+
+		def spare?
+			return self.two_rolls == 10
+		end
+
+    def advance(n)
+			@idx += n
+		end
+
+		def roll_at(index)
+			return @rolls[index]
+		end
+
+		def two_rolls_from(index)
+			return @rolls[index] + @rolls[index + 1]
+		end
+
+  end
+
+
 	class Game
 		def initialize
-#			@score = 0
 			@rolls = []
 		end
 
 		def roll(pins)
-#			@score += pins
 			@rolls << pins
 		end
 
 		def score
-#			return @score
 			score = 0
-			roll_idx = 0
-=begin
+			cur = RollCursor.new(@rolls)
 			10.times do
-				if @rolls[roll_idx] == 10 # case strike
-					score += @rolls[roll_idx] # pins
-					score += @rolls[roll_idx + 1] + @rolls[roll_idx + 2] # bonus
-					roll_idx += 1
-				elsif (@rolls[roll_idx] + @rolls[roll_idx + 1]) == 10  # case spaire
-					score += @rolls[roll_idx] + @rolls[roll_idx + 1]  # pins
-					score += @rolls[roll_idx + 2] # bonus
-					roll_idx += 2
-				else # case others
-					score += @rolls[roll_idx] + @rolls[roll_idx + 1]
-					roll_idx += 2
-				end
-			end
-=end
-
-			10.times do
-				# if roll_at(roll_idx) == 10 # case strike
-				if strike?(roll_idx) # case strike
-					score += roll_at(roll_idx)
-					# score += two_rolls_from(roll_idx + 1)
-					score += strike_bonus(roll_idx)
-					roll_idx += 1
-				# elsif two_rolls_from(roll_idx) == 10 # case spare
-				elsif spare?(roll_idx) # case spare
-					score += two_rolls_from(roll_idx)
-					# score += roll_at(roll_idx + 2)
-					score += spare_bonus(roll_idx)
-					roll_idx += 2
+				if cur.strike?
+					score += cur.roll
+					score += cur.strike_bonus
+					cur.advance(1)
+				elsif cur.spare?
+					score += cur.two_rolls
+					score += cur.spare_bonus
+					cur.advance(2)
 				else
-					score += two_rolls_from(roll_idx)
-					roll_idx += 2
+					score += cur.two_rolls
+					cur.advance(2)
 				end
 			end
 
 			return score
 		end
-
-
-    private
-
-		def roll_at(idx)
-			return @rolls[idx]
-		end
-
-		def two_rolls_from(idx)
-			return @rolls[idx] + @rolls[idx + 1]
-		end
-
-		def strike_bonus(idx)
-			return two_rolls_from(idx + 1)
-		end
-
-		def spare_bonus(idx)
-			return roll_at(idx + 2)
-		end
-
-	 	def strike?(idx)
-			return roll_at(idx) == 10
-		end
-
-		def spare?(idx)
-			return two_rolls_from(idx) == 10
-		end
-
 	end
 end
 
